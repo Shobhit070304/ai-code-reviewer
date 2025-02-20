@@ -10,28 +10,33 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const newUser = {
-      name,
-      email,
-      password,
-    };
+      const newUser = {
+        name,
+        email,
+        password,
+      };
 
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/user/register`,
-      newUser
-    );
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/user/register`,
+        newUser
+      );
 
-    if (response.status === 200) {
-      alert("Registration successful!");
-      navigate("/");
-    } else {
-      alert("Registration failed. Please try again.");
+      if (response.status === 200) {
+        alert("Registration successful!");
+        navigate("/");
+        localStorage.setItem("token", response.data.token);
+      } else {
+        alert("Registration failed. Please try again.");
+      }
+      setName("");
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      alert("Please try again.");
     }
-    setName("");
-    setEmail("");
-    setPassword("");
   }
 
   return (
@@ -90,10 +95,7 @@ const SignUp = () => {
           >
             Sign Up
           </button>
-          <Link
-            to={"/login"}
-            className="text-gray-500 text-center text-sm mt-2"
-          >
+          <Link to={"/login"} className="text-gray-500 m-auto text-sm mt-2">
             Already a user? <span className="text-blue-500">Login</span>
           </Link>
         </form>

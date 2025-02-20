@@ -9,22 +9,27 @@ function Login() {
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const user = {
-      email,
-      password,
-    };
+      const user = {
+        email,
+        password,
+      };
 
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/user/login`,
-      user
-    );
-    console.log(response);
-    if (response.status === 200) {
-      navigate("/");
-    } else {
-      alert("Invalid email or password");
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/user/login`,
+        user
+      );
+      if (response.status === 200) {
+        navigate("/");
+        localStorage.setItem("token", response.data.token);
+      } else {
+        alert("Invalid email or password");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error in login. Please try again.");
     }
   }
   return (
